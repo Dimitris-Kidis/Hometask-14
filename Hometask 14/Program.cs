@@ -9,9 +9,9 @@
 // 5. Use expression bodied methods ✅
 // 6. Use string interpolation  ✅
 // 7. Create exceptions ✅
-// 8. Create preconditions with nameof()
-// 9. Use null conditional operator
-// 10. Test C# 7 features:
+// 8. Create preconditions with nameof() ✅
+// 9. Use null conditional operator ✅
+// 10. Test C# 7 features: ✅
 //     - out
 //     - Tuples
 //     - Pattern Matching
@@ -34,6 +34,10 @@ namespace App
             Console.WriteLine($"Type: {randomTypeVar.GetType()}, content: {randomTypeVar}");
 
             Console.WriteLine($"Time till New Year: {HelperClass.TimeTillNewYear()}");
+
+            Console.WriteLine($"nameof(): {nameof(randomTypeVar)}");
+
+            Console.WriteLine($"Random is null: {((randomTypeVar ?? true) != null ? false : true)}");
         }
 
 
