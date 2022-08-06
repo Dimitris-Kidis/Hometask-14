@@ -9,7 +9,7 @@ using System.Collections.Generic;
 // 4. Convert to Autoproperty ✅
 // 5. Use expression bodied methods ✅
 // 6. Use string interpolation  ✅
-// 7. Create exceptions ✅
+// 7. Create exceptions ✅ (hometask #8)
 // 8. Create preconditions with nameof() ✅
 // 9. Use null conditional operator ✅
 // 10. Test C# 7 features: ✅
@@ -18,7 +18,7 @@ using System.Collections.Generic;
 //     - Pattern Matching ✅
 //     - ref locals ✅
 //     - local functions ✅
-//     - converions
+//     - read about User-defined converions ✅
 
 namespace App
 {
@@ -27,24 +27,27 @@ namespace App
         static void Main(string[] args)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
+            // Using named arguments
             Console.WriteLine("Standard Hotel Price For 3 Days: {0, 40}", HotelPriceFor(days: 3));
             Console.WriteLine("More Expensive Hotel Price For 5 Days: {0, 34}", HotelPriceFor(days: 5, price: 350));
             Console.WriteLine("Premium Hotel Price For 14 Days: {0, 40}", HotelPriceFor(days: 14, price: 450, stars: 5));
 
             Console.ForegroundColor = ConsoleColor.White;
             dynamic randomTypeVar = HelperClass.GetRandomType;
+            // String interpolation
             Console.WriteLine($"Type: {randomTypeVar.GetType()}, content: {randomTypeVar}");
             Console.ForegroundColor = ConsoleColor.Yellow;
 
             Console.WriteLine($"Time till New Year: {HelperClass.TimeTillNewYear()}");
             Console.ForegroundColor = ConsoleColor.White;
 
+            // Using of nameof() & Null Conditional Operator
             Console.WriteLine($"nameof(): {nameof(randomTypeVar)}");
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine($"Random is null: {((randomTypeVar ?? true) != null ? false : true)}");
             Console.ForegroundColor = ConsoleColor.White;
 
-
+            // Using out
             HelperClass.GetPersonInfo(out string Name, out string Gender, out int Age, out string Profession);
             Console.WriteLine("Person Info:");
             Console.WriteLine($"Name: {Name}, Gender: {Gender}, Age: {Age}, Profession: {Profession}");
@@ -53,6 +56,7 @@ namespace App
 
             int first = 5;
             int second = 7;
+            // Tuples & ref
             Console.WriteLine($"Before Swap: {first}, {second}");
             HelperClass.TupleSwap(ref first, ref second);
             Console.WriteLine($"After Swap: {first}, {second}");
@@ -80,6 +84,7 @@ namespace App
 
             var sequence = new int[] { 3, 5, 7, 4, 8, 3};
 
+            // Local function usage
             bool HasTwoSum(int[] nums, int target)
             {
                 var numsDictionary = new Dictionary<int, int>();
@@ -105,11 +110,17 @@ namespace App
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine($"Check if an array has a sum of two: {HasTwoSum(sequence, 10)}");
 
+            // User-defined Conversion
+            // Implicit: from int to MagicNumber
+            MagicNumber magicNumber = new MagicNumber() { Number = 3, IsMagic = true };
+            int aNumber = (int)magicNumber;
 
-
+            // Explicit: from MagicNumber to int
+            int bNumber = 3;
+            MagicNumber magicNumberB = bNumber;
         }
 
-
+        // Method with optional parameters
         static int HotelPriceFor(int days, int price = 250, int stars = 1)
         {
             return days * price * stars;
@@ -119,24 +130,28 @@ namespace App
 
     static class HelperClass
     {
-        public static dynamic GetRandomType 
-        { 
+        // Using dynamic variables & autoproperty
+        public static dynamic GetRandomType
+        {
             get
             {
                 var toss = new Random().Next(3);
-                if ( toss == 0)
+                if (toss == 0)
                 {
                     return DateTime.Now;
-                } else if ( toss == 1)
+                }
+                else if (toss == 1)
                 {
                     return new Random().Next(100);
-                } else
+                }
+                else
                 {
                     return "Ciao, World!";
                 }
             }
         }
 
+        // Expression-bodied method
         public static string TimeTillNewYear() => DateTime.Now.Year % 4 == 0 ?
                                                 $"Days: {366 - DateTime.Now.DayOfYear}, Hours: {24 - DateTime.Now.Hour},  Minutes: {60 - DateTime.Now.Minute}" :
                                                 $"Days: {365 - DateTime.Now.DayOfYear}, Hours: {24 - DateTime.Now.Hour},  Minutes: {60 - DateTime.Now.Minute}";
@@ -148,7 +163,7 @@ namespace App
             Profession = "IT";
         }
 
-        static public void TupleSwap<T> (ref T item1, ref T item2)
+        static public void TupleSwap<T>(ref T item1, ref T item2)
         {
             (item1, item2) = (item2, item1);
         }
@@ -158,11 +173,30 @@ namespace App
             var monkeys = new List<Monkey>();
             foreach (var item in animals)
             {
-                if (item is Monkey animal) monkeys.Add(animal);    
+                // Pattern Matching
+                if (item is Monkey animal) monkeys.Add(animal);
             }
             return monkeys;
         }
     }
+
+
+    public class MagicNumber
+    {
+        public int Number { get; set; }
+        public bool IsMagic { get; set; }
+
+        static public implicit operator MagicNumber(int value)
+        {
+            return new MagicNumber() { Number = value, IsMagic = false };
+        }
+
+        static public explicit operator int(MagicNumber magicNumber)
+        {
+            return magicNumber.Number;
+        }
+    }
+    
 
     class Animal
     {
