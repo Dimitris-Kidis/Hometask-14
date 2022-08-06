@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 
 
@@ -12,11 +13,11 @@
 // 8. Create preconditions with nameof() ✅
 // 9. Use null conditional operator ✅
 // 10. Test C# 7 features: ✅
-//     - out
-//     - Tuples
-//     - Pattern Matching
-//     - ref locals and ref returns
-//     - local functions
+//     - out ✅
+//     - Tuples ✅
+//     - Pattern Matching ✅
+//     - ref locals ✅
+//     - local functions ✅
 //     - converions
 
 namespace App
@@ -25,19 +26,87 @@ namespace App
     {
         static void Main(string[] args)
         {
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("Standard Hotel Price For 3 Days: {0, 40}", HotelPriceFor(days: 3));
             Console.WriteLine("More Expensive Hotel Price For 5 Days: {0, 34}", HotelPriceFor(days: 5, price: 350));
             Console.WriteLine("Premium Hotel Price For 14 Days: {0, 40}", HotelPriceFor(days: 14, price: 450, stars: 5));
 
-
+            Console.ForegroundColor = ConsoleColor.White;
             dynamic randomTypeVar = HelperClass.GetRandomType;
             Console.WriteLine($"Type: {randomTypeVar.GetType()}, content: {randomTypeVar}");
+            Console.ForegroundColor = ConsoleColor.Yellow;
 
             Console.WriteLine($"Time till New Year: {HelperClass.TimeTillNewYear()}");
+            Console.ForegroundColor = ConsoleColor.White;
 
             Console.WriteLine($"nameof(): {nameof(randomTypeVar)}");
-
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine($"Random is null: {((randomTypeVar ?? true) != null ? false : true)}");
+            Console.ForegroundColor = ConsoleColor.White;
+
+
+            HelperClass.GetPersonInfo(out string Name, out string Gender, out int Age, out string Profession);
+            Console.WriteLine("Person Info:");
+            Console.WriteLine($"Name: {Name}, Gender: {Gender}, Age: {Age}, Profession: {Profession}");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+
+
+            int first = 5;
+            int second = 7;
+            Console.WriteLine($"Before Swap: {first}, {second}");
+            HelperClass.TupleSwap(ref first, ref second);
+            Console.WriteLine($"After Swap: {first}, {second}");
+            Console.ForegroundColor = ConsoleColor.White;
+
+
+
+            var animalsList = new List<Animal>
+            {
+                new Monkey(),
+                new Lion(),
+                new Lion(),
+                new Hippo(),
+                new Monkey(),
+                new Hippo(),
+                new Hippo(),
+                new Monkey()
+            };
+
+            var monkeysList = HelperClass.GetMonkeysList(animalsList);
+            foreach (var item in monkeysList)
+            {
+                Console.WriteLine(item.GetType());
+            }
+
+            var sequence = new int[] { 3, 5, 7, 4, 8, 3};
+
+            bool HasTwoSum(int[] nums, int target)
+            {
+                var numsDictionary = new Dictionary<int, int>();
+
+                var complement = 0;
+                for (var i = 0; i < nums.Length; i++)
+                {
+                    complement = target - nums[i];
+                    var index = 0;
+                    if (complement > 0 && numsDictionary.TryGetValue(complement, out index))
+                    {
+                        return true;
+                    }
+
+                    if (numsDictionary.ContainsKey(nums[i]) == false)
+                    {
+                        numsDictionary.Add(nums[i], i);
+                    }
+                }
+
+                return false;
+            };
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($"Check if an array has a sum of two: {HasTwoSum(sequence, 10)}");
+
+
+
         }
 
 
@@ -71,6 +140,47 @@ namespace App
         public static string TimeTillNewYear() => DateTime.Now.Year % 4 == 0 ?
                                                 $"Days: {366 - DateTime.Now.DayOfYear}, Hours: {24 - DateTime.Now.Hour},  Minutes: {60 - DateTime.Now.Minute}" :
                                                 $"Days: {365 - DateTime.Now.DayOfYear}, Hours: {24 - DateTime.Now.Hour},  Minutes: {60 - DateTime.Now.Minute}";
+        static public void GetPersonInfo(out string Name, out string Gender, out int Age, out string Profession)
+        {
+            Name = "Simone Jackson";
+            Gender = "Female";
+            Age = 32;
+            Profession = "IT";
+        }
+
+        static public void TupleSwap<T> (ref T item1, ref T item2)
+        {
+            (item1, item2) = (item2, item1);
+        }
+
+        static public List<Monkey> GetMonkeysList(List<Animal> animals)
+        {
+            var monkeys = new List<Monkey>();
+            foreach (var item in animals)
+            {
+                if (item is Monkey animal) monkeys.Add(animal);    
+            }
+            return monkeys;
+        }
+    }
+
+    class Animal
+    {
+
+    }
+    class Monkey : Animal
+    {
+
+    }
+
+    class Lion : Animal
+    {
+
+    }
+
+    class Hippo : Animal
+    {
+
     }
 
     
